@@ -121,5 +121,5 @@ if __name__ == '__main__':
     input_tensor = torch.randn(1, 3, 352, 352).cuda()
 
     P = model(input_tensor)
-    print(P[0].size(), P[1].size(), P[2].size(), P[3].size())
+    # print(P[0].size(), P[1].size(), P[2].size(), P[3].size())
 

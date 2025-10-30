@@ -24,10 +24,10 @@ timm==0.6.12
 tifffile
 pillow
 thop
-simpleitk
+# simpleitk
 nibabel
 h5py
 huggingface-hub==0.11.0
 ml_collections
 tensorboardx
-medpy
+# medpy
