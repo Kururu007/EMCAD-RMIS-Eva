@@ -123,5 +123,5 @@ if __name__ == "__main__":
 
     print('Model successfully created.')
     
-    trainer = {'QaTa': trainer_chex,}
+    trainer = {'CheX': trainer_chex,}
     trainer[dataset_name](args, model, snapshot_path)

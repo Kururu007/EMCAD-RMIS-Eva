@@ -45,6 +45,21 @@ class RandomGenerator_CheX(object):
         label = torch.from_numpy(label.astype(np.float32))
         sample = {'image': image, 'label': label.long()}
         return sample
+    
+class ResizeGenerator_CheX(object):
+    def __init__(self, output_size):
+        self.output_size = output_size
+
+    def __call__(self, sample):
+        image, label = sample['image'], sample['label']
+        x, y = image.shape
+        if x != self.output_size[0] or y != self.output_size[1]:
+            image = zoom(image, (self.output_size[0] / x, self.output_size[1] / y), order=3)  # why not 3?
+            label = zoom(label, (self.output_size[0] / x, self.output_size[1] / y), order=0)
+        image = torch.from_numpy(image.astype(np.float32))
+        label = torch.from_numpy(label.astype(np.float32))
+        sample = {'image': image, 'label': label.long()}
+        return sample
 
 
 class CheX_dataset(Dataset):
@@ -61,7 +76,7 @@ class CheX_dataset(Dataset):
     def __getitem__(self, idx):
         if self.split == "train":
             slice_name = self.sample_list[idx].strip('\n')
-            img_data_path = os.path.join(self.data_dir, 'images', slice_name+'.png')
+            img_data_path = os.path.join(self.data_dir, 'images', 'image_' + slice_name + '.jpg')
             mask_data_path = os.path.join(self.data_dir, 'masks', 'mask_' + slice_name + '.png')
             assert os.path.exists(img_data_path), f"Image file does not exist: {img_data_path}"
             assert os.path.exists(mask_data_path), f"Mask file does not exist: {mask_data_path}"
@@ -80,7 +95,7 @@ class CheX_dataset(Dataset):
             
         else:
             slice_name = self.sample_list[idx].strip('\n')
-            img_data_path = os.path.join(self.data_dir, 'images', slice_name+'.png')
+            img_data_path = os.path.join(self.data_dir, 'images', 'image_' + slice_name + '.jpg')
             mask_data_path = os.path.join(self.data_dir, 'masks', 'mask_' + slice_name + '.png')
             assert os.path.exists(img_data_path), f"Image file does not exist: {img_data_path}"
             assert os.path.exists(mask_data_path), f"Mask file does not exist: {mask_data_path}"

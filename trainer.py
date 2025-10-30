@@ -18,7 +18,7 @@ from torch.cuda.amp import GradScaler, autocast
 
 from utils.dataset_synapse import Synapse_dataset, RandomGenerator
 from utils.dataset_QaTa import QaTa_dataset, RandomGenerator_QaTa
-from utils.dataset_CheX import CheX_dataset, RandomGenerator_CheX
+from utils.dataset_CheX import CheX_dataset, RandomGenerator_CheX, ResizeGenerator_CheX
 from utils.utils import powerset, one_hot_encoder, DiceLoss, val_single_volume
 
 import torchmetrics
@@ -131,7 +131,7 @@ def inference_CheX_val(args, model, best_performance):
     micro_miou_meter = BinaryJaccardIndex().cuda()
     micro_acc_meter = Accuracy(task='binary').cuda()
     
-    db_test = CheX_dataset(base_dir=args.volume_path, split="val", list_dir=args.list_dir, nclass=args.num_classes, transform=None)
+    db_test = CheX_dataset(base_dir=args.volume_path, split="val", list_dir=args.list_dir, nclass=args.num_classes, transform=transforms.Compose([ResizeGenerator_CheX(output_size=[args.img_size, args.img_size])]))
     testloader = DataLoader(db_test, batch_size=1, shuffle=False, num_workers=1)
     
     logging.info("{} test iterations per epoch".format(len(testloader)))
@@ -515,7 +515,7 @@ def trainer_chex(args, model, snapshot_path):
         save_mode_path = os.path.join(snapshot_path, 'last.pth')
         torch.save(model.state_dict(), save_mode_path)
         
-        performance = inference_QaTa_val(args, model, best_performance)
+        performance = inference_CheX_val(args, model, best_performance)
         
         save_interval = 50
 
