@@ -2,3 +2,4 @@ __pycache__
 data
 model_pth
 pretrained_pth
+test_log

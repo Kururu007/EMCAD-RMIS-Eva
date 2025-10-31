@@ -23,13 +23,13 @@ from torchmetrics.classification import BinaryJaccardIndex
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--volume_path', type=str,
-                    default='./data/QaTa_EMCAD/test', help='root dir for validation volume data')
+                    default='./data/CheXpert_EMCAD/test', help='root dir for validation volume data')
 parser.add_argument('--dataset', type=str,
-                    default='QaTa', help='experiment_name')
+                    default='CheX', help='experiment_name')
 parser.add_argument('--num_classes', type=int,
                     default=2, help='output channel of network')
 parser.add_argument('--list_dir', type=str,
-                    default='./lists/lists_QaTa', help='list dir')
+                    default='./lists/lists_CheX', help='list dir')
 
 # network related parameters
 parser.add_argument('--encoder', type=str,
@@ -58,7 +58,7 @@ parser.add_argument('--max_epochs', type=int, default=300, help='maximum epoch n
 parser.add_argument('--batch_size', type=int, default=64,
                     help='batch_size per gpu')
 parser.add_argument('--base_lr', type=float,  default=0.0001, help='segmentation network learning rate')
-parser.add_argument('--img_size', type=int, default=224, help='input patch size of network input')
+parser.add_argument('--img_size', type=int, default=512, help='input patch size of network input')
 parser.add_argument('--is_savenii', action="store_true", default=True, help='whether to save results during inference')
 
 parser.add_argument('--test_save_dir', type=str, default='predictions', help='saving prediction as nii!')
@@ -223,8 +223,7 @@ if __name__ == "__main__":
     model.cuda()
 
     #snapshot_path = 'model_pth/'+args.encoder+'_EMCAD_wi_normal_dw_parallel_add_Conv2D_cec_cdc1x1_dwc_cs_ef2_k_sizes_1_3_5_ag3g_relu6_up3_relu_to1_3ch_relu_loss2p4_w1_out1_nlrd_mutation_True_cds_False_cds_decoder_FalseRun'+str(run)+'_Synapse224/'+args.encoder+'_EMCAD_wi_normal_dw_parallel_add_Conv2D_cec_cdc1x1_dwc_cs_ef2_k_sizes_1_3_5_ag3g_relu6_up3_relu_to1_3ch_relu_loss2p4_w1_out1_nlrd_mutation_True_cds_False_cds_decoder_FalseRun'+str(run)+'_50k_epo300_bs6_lr0.0001_224_s2222'
-    # snapshot = os.path.join(snapshot_path, 'best.pth')
-    snapshot = os.path.join(snapshot_path, 'epoch_249.pth')
+    snapshot = os.path.join(snapshot_path, 'best.pth')
     if not os.path.exists(snapshot): snapshot = snapshot.replace('best', 'epoch_'+str(args.max_epochs-1))
     model.load_state_dict(torch.load(snapshot))
     snapshot_name = snapshot_path.split('/')[-1]
