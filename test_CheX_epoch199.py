@@ -55,7 +55,7 @@ parser.add_argument('--supervision', type=str,
 
 parser.add_argument('--max_iterations', type=int,default=30000, help='maximum epoch number to train')
 parser.add_argument('--max_epochs', type=int, default=300, help='maximum epoch number to train')
-parser.add_argument('--batch_size', type=int, default=64,
+parser.add_argument('--batch_size', type=int, default=16,
                     help='batch_size per gpu')
 parser.add_argument('--base_lr', type=float,  default=0.0001, help='segmentation network learning rate')
 parser.add_argument('--img_size', type=int, default=512, help='input patch size of network input')
