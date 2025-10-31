@@ -11,9 +11,9 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from utils.dataset_synapse import Synapse_dataset
-from utils.dataset_QaTa import QaTa_dataset
+from utils.dataset_CheX import CheX_dataset, ResizeGenerator_CheX
 from utils.utils import test_single_volume
-
+from torchvision import transforms
 from lib.networks import EMCADNet
 
 import torchmetrics
@@ -123,7 +123,7 @@ class SampleMeanBinaryJaccard(torchmetrics.Metric):
 #     logging.info('Testing performance in best val model: mean_dice : %f mean_hd95 : %f, mean_jacard : %f mean_asd : %f' % (performance, mean_hd95, mean_jacard, mean_asd))
 #     return "Testing Finished!"
 
-def inference_QaTa_test(args, model, test_save_path=None):
+def inference_CheX_test(args, model, test_save_path=None):
     
     macro_dice_meter = Dice(average='samples').cuda()
     macro_miou_meter = SampleMeanBinaryJaccard().cuda()
@@ -131,7 +131,7 @@ def inference_QaTa_test(args, model, test_save_path=None):
     micro_miou_meter = BinaryJaccardIndex().cuda()
     micro_acc_meter = Accuracy(task='binary').cuda()
     
-    db_test = QaTa_dataset(base_dir=args.volume_path, split="test", list_dir=args.list_dir, nclass=args.num_classes, transform=None)
+    db_test = CheX_dataset(base_dir=args.volume_path, split="test", list_dir=args.list_dir, nclass=args.num_classes, transform=transforms.Compose([ResizeGenerator_CheX(output_size=[args.img_size, args.img_size])]))
     testloader = DataLoader(db_test, batch_size=1, shuffle=False, num_workers=1)
     
     logging.info("{} test iterations per epoch".format(len(testloader)))
@@ -179,8 +179,8 @@ if __name__ == "__main__":
     torch.cuda.manual_seed(args.seed)
 
     dataset_config = {
-        'QaTa': {
-            'Dataset': QaTa_dataset,
+        'CheX': {
+            'Dataset': CheX_dataset,
             'volume_path': args.volume_path,
             'list_dir': args.list_dir,
             'num_classes': args.num_classes,
