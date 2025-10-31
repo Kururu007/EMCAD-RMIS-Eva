@@ -241,6 +241,6 @@ if __name__ == "__main__":
         os.makedirs(test_save_path, exist_ok=True)
     else:
         test_save_path = None
-    inference_QaTa_test(args, model, test_save_path)
+    inference_CheX_test(args, model, test_save_path)
 
 
