@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from lib.pvtv2 import pvt_v2_b0, pvt_v2_b1, pvt_v2_b2, pvt_v2_b3, pvt_v2_b4, pvt_v2_b5
-from lib.resnet import resnet18, resnet34, resnet50, resnet101, resnet152
-from lib.decoders import EMCAD
+from pvtv2 import pvt_v2_b0, pvt_v2_b1, pvt_v2_b2, pvt_v2_b3, pvt_v2_b4, pvt_v2_b5
+from resnet import resnet18, resnet34, resnet50, resnet101, resnet152
+from decoders import EMCAD
 
 
 class EMCADNet(nn.Module):
@@ -122,10 +122,11 @@ if __name__ == '__main__':
     input_tensor = torch.randn(1, 3, 352, 352).cuda()
 
     P = model(input_tensor)
-    # print(P[0].size(), P[1].size(), P[2].size(), P[3].size())
+    # print(P[0].size(), P[1].size(), P[2].size(), P[3].size()
+            
     
     from fvcore.nn import FlopCountAnalysis, flop_count_table
-    input_tensor = torch.randn(1, 3, 224, 224).cuda()
+    input_tensor = torch.randn(1, 3, 512, 512).cuda()
     flops = FlopCountAnalysis(model, (input_tensor))
     print(flop_count_table(flops, max_depth=3))
 
