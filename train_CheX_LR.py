@@ -8,18 +8,18 @@ import torch.nn as nn
 import torch.backends.cudnn as cudnn
 
 from lib.networks import EMCADNet
-from trainer import trainer_mos
+from trainer import trainer_chex
 
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--root_path', type=str,
-                    default='./data/MosMedPlus_EMCAD/train', help='root dir for data')
+                    default='./data/CheXpert_EMCAD/train', help='root dir for data')
 parser.add_argument('--volume_path', type=str,
-                    default='./data/MosMedPlus_EMCAD/val', help='root dir for validation volume data')
+                    default='./data/CheXpert_EMCAD/val', help='root dir for validation volume data')
 parser.add_argument('--dataset', type=str,
-                    default='Mos', help='experiment_name')
+                    default='CheX', help='experiment_name')
 parser.add_argument('--list_dir', type=str,
-                    default='./lists/lists_Mos', help='list dir')
+                    default='./lists/lists_CheX', help='list dir')
 parser.add_argument('--num_classes', type=int,
                     default=2, help='output channel of network')
 # network related parameters
@@ -49,11 +49,11 @@ parser.add_argument('--max_iterations', type=int,
 parser.add_argument('--max_epochs', type=int,
                     default=300, help='maximum epoch number to train')
 parser.add_argument('--batch_size', type=int,
-                    default=8, help='batch_size per gpu')
+                    default=32, help='batch_size per gpu')
 parser.add_argument('--base_lr', type=float,  default=0.0001,
                     help='segmentation network learning rate')
 parser.add_argument('--img_size', type=int,
-                    default=512, help='input patch size of network input')
+                    default=224, help='input patch size of network input')
 parser.add_argument('--n_gpu', type=int, default=1, help='total gpu')
 parser.add_argument('--deterministic', type=int,  default=1,
                     help='whether use deterministic training')
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     
     dataset_name = args.dataset
     dataset_config = {
-        'Mos': {
+        'CheX': {
             'root_path': args.root_path,
             'volume_path': args.volume_path,
             'list_dir': args.list_dir,
@@ -123,5 +123,5 @@ if __name__ == "__main__":
 
     print('Model successfully created.')
     
-    trainer = {'Mos': trainer_mos,}
+    trainer = {'CheX': trainer_chex,}
     trainer[dataset_name](args, model, snapshot_path)
